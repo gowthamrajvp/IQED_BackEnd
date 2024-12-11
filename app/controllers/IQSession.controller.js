@@ -73,9 +73,9 @@ async function createIQSession(req, res) {
 
 async function getIQSession(req, res) {
   try {
-    const {sessionId} = req.body();
+    const {sessionId} = req.body;
     if (!sessionId) {
-      return res.status(400).json(req.session);
+      return res.status(400).json(req.body);
     }
 
     const session = await IQSessionModel.findById(sessionId)
