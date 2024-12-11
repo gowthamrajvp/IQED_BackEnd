@@ -117,8 +117,8 @@ const calculateIQ = async (userScore) => {
 
 async function updateIQSessionAnswers(req, res) {
   try {
-    const sessionId = req.session.QuizToken;
-    const { answeredQuestions, timeTaken } = req.body;
+   
+    const { answeredQuestions, timeTaken, sessionId } = req.body;
 
     if (!sessionId || !timeTaken || !Array.isArray(answeredQuestions)) {
       return res.status(400).json({ message: "Invalid request payload." });
