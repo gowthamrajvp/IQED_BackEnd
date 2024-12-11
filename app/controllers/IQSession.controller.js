@@ -191,8 +191,8 @@ async function Send_Email_PDF(toEmail, file, name, score) {
 
 async function SendMail(req, res)  {
   try {
-    const sessionId = req.session.QuizToken;
-    const { file, email, name } = req.body;
+
+    const { file, email, name ,sessionId} = req.body;
     const session = await IQSessionModel.findById(sessionId);
     console.log(file, email, name, session);
     const emailSent = await Send_Email_PDF(email, file, name, session.IQscore);
