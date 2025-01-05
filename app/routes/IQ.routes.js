@@ -3,12 +3,13 @@ const { deleteQuestions,getAllQuestions,getQuestions,postQuestions,putQuestions,
 const {updateIQ,IQUserVerify,Createbulkusers} = require("../controllers/IQUser.controller")
 const router = require("express").Router();
 
-
+const multer = require("multer");
+const upload = multer();
 // POST
 router.post("/createSession",createIQSession)
 router.post("/getSession",getIQSession)
 router.put("/updateAnswers",updateIQSessionAnswers)
-router.post("/SendEmail",SendMail)
+router.post("/SendEmail",upload.single("file"),SendMail)
 
 router.post("/bulk-users",Createbulkusers)
 router.post("/IQUsersVerify",IQUserVerify)

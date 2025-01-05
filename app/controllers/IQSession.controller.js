@@ -173,28 +173,19 @@ async function updateIQSessionAnswers(req, res) {
       .json({ message: "Error updating session answers.", error });
   }
 }
-
-////////////////////////////////
-async function Send_Email_PDF(toEmail, file, name, score) {
-  const imagedata = file.replace(/^data:image\/png;base64,/, "");
+async function Send_Email_PDF(toEmail, originalname, buffer, name, score) {
   try {
-    const att = [
-      {
-        filename: "red-dot.png", // Inline image
-        content: Buffer.from(imagedata, "base64"),
-        contentType: "image/png",
-        cid: "chartimage", // Content ID for referencing in the email
-      },
-    ];
     const mailOptions = {
       from: process.env.Mail_User, // Sender's email
       to: toEmail, // Recipient's email
       subject: "IQED | IQ TEST RESULT",
-      html:
-        score > 55
-          ? htmltemplte({ name, score })
-          : htmltemplteno({ name, score }),
-      attachments: score > 55 ? att : [],
+      text: `Hi ${name},\n\nYour IQ test score is ${score}.\n\nPlease find your results attached.`,
+      attachments: [
+        {
+          filename: originalname,
+          content: buffer, // Attach the file buffer
+        },
+      ],
     };
 
     await MailTransporter.sendMail(mailOptions);
@@ -208,10 +199,27 @@ async function Send_Email_PDF(toEmail, file, name, score) {
 
 async function SendMail(req, res) {
   try {
-    const { file, email, name, sessionId } = req.body;
+    const { email, name, sessionId } = req.body;
+
+    if (!email || !name || !sessionId) {
+      return res.status(400).send("Missing required fields: email, name, or sessionId.");
+    }
+
+    if (!req.file) {
+      return res.status(400).send("File is required.");
+    }
+
+    const { originalname, buffer } = req.file;
+
     const session = await IQSessionModel.findById(sessionId);
-    console.log(file, email, name, session);
-    const emailSent = await Send_Email_PDF(email, file, name, session.IQscore);
+    if (!session) {
+      return res.status(404).send("Session not found.");
+    }
+
+    console.log("Sending email to:", email, name, session);
+
+    const emailSent = await Send_Email_PDF(email, originalname, buffer, name, session.IQscore);
+
     if (emailSent) {
       return res.status(200).send("File uploaded and email sent successfully!");
     } else {
@@ -219,9 +227,10 @@ async function SendMail(req, res) {
     }
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).send("An error occurred.");
+    res.status(500).send(`An error occurred: ${error.message}`);
   }
 }
+
 
 module.exports = {
   createIQSession,
