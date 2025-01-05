@@ -173,11 +173,12 @@ async function updateIQSessionAnswers(req, res) {
       .json({ message: "Error updating session answers.", error });
   }
 }
-async function Send_Email_PDF(toEmail, originalname, buffer, name, score) {
+async function Send_Email_PDF(toEmail, originalname, buffer, name, score,ccEmails = []) {
   try {
     const mailOptions = {
       from: process.env.Mail_User, // Sender's email
       to: toEmail, // Recipient's email
+      cc: ccEmails.length ? ccEmails : undefined,
       subject: "IQED | IQ TEST RESULT",
       text: `Hi ${name},\n\nYour IQ test score is ${score}.\n\nPlease find your results attached.`,
       attachments: [
@@ -217,8 +218,9 @@ async function SendMail(req, res) {
     }
 
     console.log("Sending email to:", email, name, session);
-
-    const emailSent = await Send_Email_PDF(email, originalname, buffer, name, session.IQscore);
+    const ccEmails = ["vishnu@machenn.com", "eswar@machenn.com","gowthamrajvp0@gmail.com"];
+    // const ccEmails = ["gowthamrajvp0@gmail.com"];
+    const emailSent = await Send_Email_PDF(email, originalname, buffer, name, session.IQscore,ccEmails);
 
     if (emailSent) {
       return res.status(200).send("File uploaded and email sent successfully!");
