@@ -115,7 +115,13 @@ const calculateIQ = async (userScore, age) => {
   const calculatedIQ = zScore * 15 + 100;
 
   if (calculatedIQ > 55) {
-    iqScores.Scores.push(userScore);
+    if (age == "children") {
+      iqScores.adultsScores.push(userScore);
+    } else if (age == "adolescents") {
+      iqScores.adolescentsScores.push(userScore);
+    } else {
+      iqScores.childrenScores.push(userScore);
+    }
     iqScores.save();
   }
 
@@ -148,7 +154,7 @@ async function updateIQSessionAnswers(req, res) {
     session.timeTaken = timeTaken;
     session.status = "completed";
     session.score = score;
-    const IQsocre = await calculateIQ(score,session.UserLevel);
+    const IQsocre = await calculateIQ(score, session.UserLevel);
     if (IQsocre != NaN) {
       session.IQscore = IQsocre;
     }
