@@ -7,6 +7,7 @@ const {
 const mongoose = require("mongoose");
 const MailTransporter = require("../config/mailer.config");
 const {htmltemplte,htmltemplteno} = require("../models/IQ/template");
+const IQUserModel = require("../models/User/IQUser.model");
 
 
 async function createIQSession(req, res) {
@@ -118,7 +119,7 @@ const calculateIQ = async (userScore) => {
 async function updateIQSessionAnswers(req, res) {
   try {
    
-    const { answeredQuestions, timeTaken, sessionId } = req.body;
+    const { IQUserId,answeredQuestions, timeTaken, sessionId } = req.body;
 
     if (!sessionId || !timeTaken || !Array.isArray(answeredQuestions)) {
       return res.status(400).json({ message: "Invalid request payload." });
@@ -149,7 +150,10 @@ async function updateIQSessionAnswers(req, res) {
     console.log(IQsocre, score);
 
     await session.save();
-
+    const user = await IQUserModel.findById(IQUserId);
+    user.isComplated = true;
+    user.Iq = session._id;
+    await user.save();
     return res.status(200).json(session);
   } catch (error) {
     console.error("Error updating session answers:", error);

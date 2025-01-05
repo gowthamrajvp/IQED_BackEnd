@@ -9,6 +9,24 @@ const IQDataSchema = new Schema(
         required: true,
       },
     ],
+    ScoresLevel1: [
+      {
+        type: Number,
+        required: true,
+      },
+    ],
+    ScoresLevel2: [
+      {
+        type: Number,
+        required: true,
+      },
+    ],
+    ScoresLevel3: [
+      {
+        type: Number,
+        required: true,
+      },
+    ],
   },
   {
     timestamps: true,
