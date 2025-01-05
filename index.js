@@ -52,7 +52,7 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(express.json({limit: '50mb'}));
+app.use(express.json({limit: '5mb'}));
 app.use(sessionMiddleware);
 
 
