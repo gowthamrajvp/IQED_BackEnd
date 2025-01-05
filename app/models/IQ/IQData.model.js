@@ -9,19 +9,19 @@ const IQDataSchema = new Schema(
         required: true,
       },
     ],
-    ScoresLevel1: [
+    childrenScores: [
       {
         type: Number,
         required: true,
       },
     ],
-    ScoresLevel2: [
+    adolescentsScores: [
       {
         type: Number,
         required: true,
       },
     ],
-    ScoresLevel3: [
+    adultsScores: [
       {
         type: Number,
         required: true,
