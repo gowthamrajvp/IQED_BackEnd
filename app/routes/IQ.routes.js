@@ -1,6 +1,6 @@
 const { createIQSession,getIQSession,updateIQSessionAnswers, SendMail} = require("../controllers/IQSession.controller");
 const { deleteQuestions,getAllQuestions,getQuestions,postQuestions,putQuestions,postBulkQuestions} = require("../controllers/IQQuestion.controller");
-const {updateIQ,IQUserVerify,Createbulkusers} = require("../controllers/IQUser.controller")
+const {updateIQ,IQUserVerify,Createbulkusers, getIQUser} = require("../controllers/IQUser.controller")
 const router = require("express").Router();
 
 const multer = require("multer");
@@ -14,6 +14,9 @@ router.post("/SendEmail",upload.single("file"),SendMail)
 router.post("/bulk-users",Createbulkusers)
 router.post("/IQUsersVerify",IQUserVerify)
 router.post("/update-iq",updateIQ)
+
+
+router.get("/getIQUser",getIQUser)
 
 
 

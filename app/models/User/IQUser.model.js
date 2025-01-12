@@ -26,7 +26,7 @@ const IQUserSchema = new Schema({
   },
   Iq: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "QuizSession",
+    ref: "IQSession",
   },
   isComplated:{
     type:Boolean,

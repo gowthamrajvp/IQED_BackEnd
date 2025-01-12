@@ -78,9 +78,29 @@ async function updateIQ(req, res) {
     res.status(500).json({ error: error.message });
   }
 }
+async function getIQUser(req, res) {
+  
+  try {
+    const Users = await IQUserModel.find({isComplated:true})
+    .populate({
+      path: "Iq",
+      select: "IQscore", 
+    })
+    .select("name email Iq isComplated") 
+    .exec();
+    if (!Users) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    res.status(200).json({ message: "getIQUser get successfully", user: Users });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 
 module.exports = {
   Createbulkusers,
   IQUserVerify,
   updateIQ,  
+  getIQUser,
 };
